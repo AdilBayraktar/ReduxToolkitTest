@@ -1,6 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
-import { useState } from "react";
+import { useEffect } from "react";
 import Home from "./pages/Home";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -12,12 +12,19 @@ import {
   stringCustom,
   stringFatih,
 } from "./redux/app/features/testString/testStringSlice";
+import { getCountries } from "./redux/app/features/countries/countriesSlice";
 
 function App() {
   const dispatch = useDispatch();
   console.log(useSelector((state) => state));
   const { counter } = useSelector((state) => state.counter);
   const { testString } = useSelector((state) => state.testString);
+  const { countries } = useSelector((state) => state.countries);
+
+  useEffect(() => {
+    dispatch(getCountries());
+  }, []);
+
   return (
     <div className="App">
       <span onClick={() => dispatch(decrement())}>-</span>
@@ -29,6 +36,18 @@ function App() {
       <span onClick={() => dispatch(stringAdil())}>Adil</span>
       <span onClick={() => dispatch(stringFatih())}>Fatih</span>
       <span onClick={() => dispatch(stringCustom("Selim"))}>Custom</span>
+      <hr />
+      <div>
+        <ul>
+          {countries.length > 0 ? (
+            countries.map((c) => {
+              return <li>{c.name.official}</li>;
+            })
+          ) : (
+            <p>loading....</p>
+          )}
+        </ul>
+      </div>
     </div>
   );
 }
